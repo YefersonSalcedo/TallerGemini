@@ -1,83 +1,55 @@
 package com.taller.gemini.model
 
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+
 /**
  * =============================================================================
- * TODO(PASO 4): Definir los modelos de datos para la API REST de Google Gemini
+ * TODO(PASO 4): Definir los modelos de datos para la API REST de Gemini
  * =============================================================================
  *
- * PISTAS DE DISEÑO:
- * La API de Gemini espera una estructura JSON jerárquica:
- *
- * 1. Request:
- *    {
- *      "contents": [
- *        {
- *          "parts": [
- *            { "text": "Pregunta del usuario" },
- *            { "inline_data": { "mime_type": "image/jpeg", "data": "base64..." } }
- *          ]
- *        }
- *      ],
- *      "generationConfig": {
- *         "responseMimeType": "application/json" // Opcional, para respuestas JSON estructuradas
- *      }
- *    }
- *
- * 2. Response:
- *    {
- *      "candidates": [
- *        {
- *          "content": {
- *            "parts": [
- *              { "text": "Respuesta generada por el modelo..." }
- *            ]
- *          }
- *        }
- *      ]
- *    }
+ * Estructura jerárquica del JSON:
+ * - Request:  contents -> parts -> (text | inline_data { mime_type, data })
+ *             + generationConfig { responseMimeType } (opcional, para JSON estructurado)
+ * - Response: candidates -> content -> parts -> text
  *
  * RECUERDA:
- * - Anota cada clase con @kotlinx.serialization.Serializable
- * - Usa @SerialName("inline_data") o @SerialName("mime_type") si los nombres en JSON usan snake_case.
- * - Descomenta las clases que vayas definiendo a continuación.
+ * - Anota cada clase con @JsonClass(generateAdapter = true) (Moshi + KSP).
+ * - Usa @Json(name = "inline_data") y @Json(name = "mime_type") donde el JSON usa snake_case.
+ * - Descomenta las clases que vayas definiendo.
  */
-
-
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
-
-@Serializable
+@JsonClass(generateAdapter = true)
 data class GeminiRequest(
     val contents: List<GeminiContent>,
     val generationConfig: GeminiGenerationConfig? = null
 )
 
-@Serializable
+@JsonClass(generateAdapter = true)
 data class GeminiContent(
     val parts: List<GeminiPart>,
     val role: String? = null
 )
 
-@Serializable
+@JsonClass(generateAdapter = true)
 data class GeminiPart(
     val text: String? = null,
-    @SerialName("inline_data")
+    @Json(name = "inline_data")
     val inlineData: GeminiInlineData? = null
 )
 
-@Serializable
+@JsonClass(generateAdapter = true)
 data class GeminiInlineData(
-    @SerialName("mime_type")
+    @Json(name = "mime_type")
     val mimeType: String,
     val data: String // Codificado en Base64
 )
 
-@Serializable
+@JsonClass(generateAdapter = true)
 data class GeminiGenerationConfig(
     val responseMimeType: String? = null
 )
 
-@Serializable
+@JsonClass(generateAdapter = true)
 data class GeminiResponse(
     val candidates: List<GeminiCandidate>? = null
 ) {
@@ -86,7 +58,7 @@ data class GeminiResponse(
     }
 }
 
-@Serializable
+@JsonClass(generateAdapter = true)
 data class GeminiCandidate(
     val content: GeminiContent? = null
 )

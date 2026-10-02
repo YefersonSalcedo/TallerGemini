@@ -4,8 +4,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    // TODO(PASO 2): Descomentar el plugin de kotlinx.serialization
-    alias(libs.plugins.kotlinx.serialization)
+    // TODO(PASO 2): Descomenta el plugin `alias(libs.plugins.ksp)`.
+    alias(libs.plugins.ksp)
 }
 
 // Lectura de la API Key desde local.properties
@@ -71,13 +71,12 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
-    // =========================================================================
-    // TODO(PASO 2): Descomentar dependencias de Retrofit, Converter y OkHttp
-    // =========================================================================
-    implementation(libs.kotlinx.serialization.json)
+    // TODO(PASO 2): Descomenta las 5 líneas de red y JSON
     implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.kotlinx.serialization)
+    implementation(libs.retrofit.converter.moshi)
+    implementation(libs.moshi)
     implementation(libs.okhttp.logging.interceptor)
+    ksp(libs.moshi.kotlin.codegen)
 
     debugImplementation(libs.androidx.ui.tooling)
 }

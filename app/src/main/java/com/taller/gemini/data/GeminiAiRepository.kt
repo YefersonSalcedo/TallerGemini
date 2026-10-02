@@ -1,6 +1,7 @@
 package com.taller.gemini.data
 
 import android.graphics.Bitmap
+import com.squareup.moshi.Moshi
 import com.taller.gemini.model.GeminiContent
 import com.taller.gemini.model.GeminiGenerationConfig
 import com.taller.gemini.model.GeminiInlineData
@@ -11,37 +12,29 @@ import com.taller.gemini.model.IncidentInfo
 
 /**
  * =============================================================================
- * TODO(PASO 5): Implementar GeminiAiRepository conectando la API real de Gemini
+ * TODO(PASO 5): Implementar GeminiAiRepository con la API real de Gemini
  * =============================================================================
  *
- * Esta clase implementa el contrato [AiRepository] consumiendo la interfaz
- * Retrofit [GeminiApi] mediante corrutinas de Kotlin.
- *
- * Parámetros en el constructor:
- * - api: GeminiApi
- * - apiKey: String (obtenida desde BuildConfig.GEMINI_API_KEY)
- * - modelName: String (obtenida desde Constants.MODEL_NAME)
+ * Implementa [AiRepository] usando [GeminiApi] con corrutinas.
+ * Constructor: api, apiKey (BuildConfig.GEMINI_API_KEY), modelName (Constants.MODEL_NAME)
+ * y moshi (para convertir el JSON de la clasificación en [IncidentInfo]).
  */
-@Suppress("JSON_FORMAT_REDUNDANT")
 class GeminiAiRepository(
     private val api: GeminiApi,
     private val apiKey: String = com.taller.gemini.BuildConfig.GEMINI_API_KEY,
-    private val modelName: String = com.taller.gemini.util.Constants.MODEL_NAME
+    private val modelName: String = com.taller.gemini.util.Constants.MODEL_NAME,
+    private val moshi: Moshi = Moshi.Builder().build()
 ) : AiRepository {
 
 
+
     /**
-     * =========================================================================
-     * TODO(PASO 5): Implementar consulta simple de texto (askText)
-     * =========================================================================
+     * TODO(PASO 5): Implementar askText
      *
-     * PISTAS:
-     * 1. Construye un GeminiRequest con un GeminiContent y un GeminiPart que contenga el prompt.
-     * 2. Ejecuta en un bloque try-catch:
-     *      val response = api.generateContent(modelName, apiKey, request)
-     *      val text = response.firstText() ?: return Result.failure(...)
-     *      Result.success(text)
-     * 3. Retorna Result.failure(exception) ante fallos de red o parsing.
+     * 1. Arma un GeminiRequest con un GeminiContent y un GeminiPart(text = prompt).
+     * 2. Dentro de un try-catch llama a api.generateContent(modelName, apiKey, request).
+     * 3. Devuelve Result.success(texto) con response.firstText(), o Result.failure(...)
+     *    si la respuesta viene vacía o hay un error de red.
      */
     override suspend fun askText(prompt: String): Result<String> {
         return try {
@@ -65,22 +58,16 @@ class GeminiAiRepository(
     }
 
 
+
+
+
     /**
-     * =========================================================================
-     * TODO(PASO 5): Implementar consulta multimodal con imagen (askAboutImage)
-     * =========================================================================
+     * TODO(PASO 5): Implementar askAboutImage (multimodal)
      *
-     * PISTAS:
-     * 1. Convierte el [image] Bitmap a ByteArray en formato JPEG comprimido (ej: calidad 80-85%).
-     *    val stream = ByteArrayOutputStream()
-     *    image.compress(Bitmap.CompressFormat.JPEG, 85, stream)
-     *    val base64String = Base64.encodeToString(stream.toByteArray(), Base64.NO_WRAP)
-     *
-     * 2. Agrega dos GeminiPart a la lista de partes:
-     *    - Una parte de texto con el prompt del usuario.
-     *    - Una parte inlineData con mimeType = "image/jpeg" y data = base64String.
-     *
-     * 3. Llama a la API con ese request y retorna el texto resultante envuelto en Result.success.
+     * 1. Comprime el Bitmap a JPEG (calidad ~85) y codifícalo en Base64 con Base64.NO_WRAP.
+     * 2. Crea dos GeminiPart: una con el texto del prompt y otra con
+     *    inlineData = GeminiInlineData(mimeType = "image/jpeg", data = base64).
+     * 3. Llama a la API y devuelve el texto envuelto en Result.success.
      */
     override suspend fun askAboutImage(image: Bitmap, prompt: String): Result<String> {
         return try {
@@ -118,30 +105,16 @@ class GeminiAiRepository(
     }
 
 
+
+
     /**
-     * =========================================================================
-     * TODO(PASO 5): Implementar salida estructurada en JSON (classifyIncident)
-     * =========================================================================
+     * TODO(PASO 5): Implementar classifyIncident (salida estructurada en JSON)
      *
-     * PISTAS:
-     * 1. Diseña un prompt estructurado pidiendo analizar la incidencia urbana y responder
-     *    ÚNICAMENTE con un JSON con los campos: "categoria", "urgencia", "resumen".
-     *
-     *    Ejemplo de System Prompt / Prompt:
-     *    "Eres un asistente municipal de atención ciudadana. Analiza este reporte:
-     *     '$description'
-     *     Devuelve un JSON con:
-     *     - categoria (ej: Malla vial, Alumbrado, Fuga de agua, Basura, Seguridad)
-     *     - urgencia (Baja, Media, Alta, Crítica)
-     *     - resumen (breve síntesis de 1 frase)
-     *     Responde en formato JSON válido."
-     *
-     * 2. Opcional (avanzado): Activa generationConfig = GeminiGenerationConfig(responseMimeType = "application/json")
-     *    para forzar al modelo a devolver JSON puro sin delimitadores markdown.
-     *
-     * 3. Limpia posibles delimitadores markdown (```json ... ```) si es necesario y deserializa:
-     *    val incident = Json.decodeFromString<IncidentInfo>(cleanJsonText)
-     *    Result.success(incident)
+     * 1. Escribe un prompt que pida SOLO un JSON con "categoria", "urgencia" y "resumen".
+     * 2. Usa generationConfig = GeminiGenerationConfig(responseMimeType = "application/json").
+     * 3. Limpia posibles delimitadores ```json ... ``` y deserializa con
+     *    moshi.adapter(IncidentInfo::class.java).fromJson(...).
+     * 4. Devuelve Result.success(incidente) o Result.failure(...).
      */
     override suspend fun classifyIncident(description: String): Result<IncidentInfo> {
         return try {
@@ -151,8 +124,8 @@ class GeminiAiRepository(
             "$description"
             
             Devuelve exclusivamente un JSON con estos 3 campos:
-            - "categoria": Ejemplos: "Malla Vial", "Agua y Alcantarillado", "Alumbrado Público", "Gestión Ambiental", "Seguridad"
-            - "urgencia": Uno de: "Baja", "Media", "Alta", "Crítica"
+            - "categoria": Ejemplos: "N/A"", Malla Vial", "Agua y Alcantarillado", "Alumbrado Público", "Gestión Ambiental", "Seguridad"
+            - "urgencia": Uno de: "N/A', "Baja", "Media", "Alta", "Crítica"
             - "resumen": Una frase sintética del problema.
         """.trimIndent()
 
@@ -174,14 +147,12 @@ class GeminiAiRepository(
                 .replace("```", "")
                 .trim()
 
-            val incidentInfo = kotlinx.serialization.json.Json {
-                ignoreUnknownKeys = true
-            }.decodeFromString<IncidentInfo>(cleanJson)
+            val incidentInfo = moshi.adapter(IncidentInfo::class.java).fromJson(cleanJson)
+                ?: return Result.failure(Exception("JSON vacío o inválido"))
 
             Result.success(incidentInfo)
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
-
 }

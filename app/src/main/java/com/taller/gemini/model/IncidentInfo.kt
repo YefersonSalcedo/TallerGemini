@@ -1,13 +1,9 @@
 package com.taller.gemini.model
 
-/**
- * Representa la información estructurada de una incidencia ciudadana
- * analizada por Gemini.
- *
- * TODO(PASO 2 / PASO 4): Descomentar la anotación @Serializable cuando
- * descomentes el plugin y la librería de kotlinx.serialization en build.gradle.kts.
- */
-@kotlinx.serialization.Serializable
+import com.squareup.moshi.JsonClass
+
+// TODO(PASO 4): Descomenta @JsonClass(generateAdapter = true) (requiere KSP del Paso 2).
+@JsonClass(generateAdapter = true)
 data class IncidentInfo(
     val categoria: String,
     val urgencia: String,

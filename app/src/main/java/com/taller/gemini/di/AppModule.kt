@@ -1,33 +1,33 @@
 package com.taller.gemini.di
 
-import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import com.squareup.moshi.Moshi
 import com.taller.gemini.data.AiRepository
 import com.taller.gemini.data.GeminiAiRepository
 import com.taller.gemini.data.GeminiApi
 import com.taller.gemini.util.Constants
-import kotlinx.serialization.json.Json
-import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
 /**
- * Módulo de inyección de dependencias simple (Service Locator).
- * Este es el único punto de la aplicación donde se decide qué implementación
- * de [AiRepository] se utiliza.
+ * =============================================================================
+ * TODO(PASO 6): Conectar GeminiAiRepository
+ * =============================================================================
+ *
+ * Construye Moshi, OkHttp (con HttpLoggingInterceptor) y Retrofit con
+ * Constants.GEMINI_BASE_URL y MoshiConverterFactory, y expón:
+ *   val aiRepository: AiRepository = GeminiAiRepository(geminiApi, moshi = moshi)
  */
 object AppModule {
 
-    private val json = Json {
-        ignoreUnknownKeys = true
-        coerceInputValues = true
-    }
+    // Usa los adaptadores generados por KSP e ignora las claves desconocidas del JSON.
+    private val moshi = Moshi.Builder().build()
 
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
-        // BODY imprime el JSON enviado y recibido (útil para aprender).
         level = HttpLoggingInterceptor.Level.BODY
-        // Oculta la API key en Logcat (va en este header)
+        // La API key viaja en este header: se oculta para que no aparezca en Logcat.
         redactHeader("x-goog-api-key")
     }
 
@@ -40,12 +40,12 @@ object AppModule {
     private val retrofit = Retrofit.Builder()
         .baseUrl(Constants.GEMINI_BASE_URL)
         .client(okHttpClient)
-        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
+        .addConverterFactory(MoshiConverterFactory.create(moshi))
         .build()
 
     private val geminiApi = retrofit.create(GeminiApi::class.java)
 
     val aiRepository: AiRepository by lazy {
-        GeminiAiRepository(geminiApi)
+        GeminiAiRepository(geminiApi, moshi = moshi)
     }
 }
