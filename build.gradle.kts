@@ -3,6 +3,5 @@ plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.kotlin.android) apply false
     alias(libs.plugins.kotlin.compose) apply false
-    // TODO(PASO 2): Descomenta el plugin KSP (genera los adaptadores de Moshi).
     alias(libs.plugins.ksp) apply false
 }

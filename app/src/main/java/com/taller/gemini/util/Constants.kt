@@ -1,7 +1,5 @@
 package com.taller.gemini.util
 
-// TODO(PASO 7): Reemplaza "MODELO_AQUI" por un modelo Flash/Flash-Lite vigente
-// (confirma el nombre exacto en https://ai.google.dev/gemini-api/docs/models).
 object Constants {
     const val GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/"
 

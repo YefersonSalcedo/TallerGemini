@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
-    // TODO(PASO 2): Descomenta el plugin `alias(libs.plugins.ksp)`.
     alias(libs.plugins.ksp)
 }
 
@@ -71,7 +70,6 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
 
-    // TODO(PASO 2): Descomenta las 5 líneas de red y JSON
     implementation(libs.retrofit)
     implementation(libs.retrofit.converter.moshi)
     implementation(libs.moshi)

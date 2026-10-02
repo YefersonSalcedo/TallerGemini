@@ -11,15 +11,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
-/**
- * =============================================================================
- * TODO(PASO 6): Conectar GeminiAiRepository
- * =============================================================================
- *
- * Construye Moshi, OkHttp (con HttpLoggingInterceptor) y Retrofit con
- * Constants.GEMINI_BASE_URL y MoshiConverterFactory, y expón:
- *   val aiRepository: AiRepository = GeminiAiRepository(geminiApi, moshi = moshi)
- */
 object AppModule {
 
     // Usa los adaptadores generados por KSP e ignora las claves desconocidas del JSON.
