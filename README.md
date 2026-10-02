@@ -1,8 +1,8 @@
-# Taller Práctico (1 hora): Integración de APIs de IA con Google Gemini en Android
+# Taller Práctico: Integración de APIs de IA con Google Gemini en Android
 
 ¡Bienvenido al taller de **Integración de APIs de Inteligencia Artificial con Gemini en Android**!
 
-En este taller de 60 minutos aprenderás a conectar una aplicación moderna en **Kotlin con Jetpack Compose y Material 3** con los servicios de IA de última generación de Google Gemini, cubriendo:
+En este taller aprenderás a conectar una aplicación moderna en **Kotlin con Jetpack Compose y Material 3** con los servicios de IA de última generación de Google Gemini, cubriendo:
 
 1. **Generación de texto simple (Zero-Shot / Prompting básico)**.
 2. **Entrada multimodal con visión artificial (Photo Picker + análisis de imágenes en Base64)**.
@@ -43,17 +43,6 @@ app/src/main/java/com/taller/gemini/
 ```
 
 ---
-
-## ⏱️ Cronograma sugerido del Taller (60 minutos)
-
-| Tiempo          | Bloque              | Actividad                                                                                          |
-| --------------- | ------------------- | -------------------------------------------------------------------------------------------------- |
-| **00 - 10 min** | Introducción        | Explicación de la arquitectura, clonar el repositorio y recorrer la estructura del proyecto.        |
-| **10 - 20 min** | Configuración       | Obtener API Key de AI Studio, `local.properties`, dependencias Gradle y permisos (Pasos 1, 2 y 3). |
-| **20 - 35 min** | Contrato de Red     | Modelos DTO de Gemini y definición de la interfaz Retrofit (Paso 4).                               |
-| **35 - 50 min** | Implementación      | Lógica del repositorio: Texto, Imagen y JSON estructurado (Pasos 5 y 6).                           |
-| **50 - 55 min** | Configuración Final | Ajuste de `MODEL_NAME` (Paso 7) y compilación final.                                               |
-| **55 - 60 min** | Pruebas y Cierre    | Demo en emulador/dispositivo real, preguntas y conclusiones (Paso 8).                              |
 
 ## Guía Paso a Paso (TODOs del 1 al 8)
 
@@ -140,8 +129,6 @@ Gemini utiliza una estructura jerárquica: `contents` -> `parts` -> (`text` o `i
 Descomenta y define las clases. Cada una lleva `@JsonClass(generateAdapter = true)` para que KSP genere su adaptador, y `@Json(name = "...")` donde el nombre del JSON (snake_case) difiere del nombre en Kotlin:
 
 ```kotlin
-package com.taller.gemini.model
-
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -211,8 +198,6 @@ data class IncidentInfo(
 Declara el método POST para el endpoint de Gemini:
 
 ```kotlin
-package com.taller.gemini.data
-
 import com.taller.gemini.model.GeminiRequest
 import com.taller.gemini.model.GeminiResponse
 import retrofit2.http.Body
@@ -378,8 +363,6 @@ Abre `app/src/main/java/com/taller/gemini/di/AppModule.kt`:
 Instancia Moshi y Retrofit con OkHttp, y conecta el repositorio:
 
 ```kotlin
-package com.taller.gemini.di
-
 import com.squareup.moshi.Moshi
 import com.taller.gemini.data.AiRepository
 import com.taller.gemini.data.GeminiAiRepository
@@ -432,8 +415,6 @@ Abre `app/src/main/java/com/taller/gemini/util/Constants.kt`:
 Reemplaza `"MODELO_AQUI"` por un modelo disponible en la capa gratuita. Los modelos de Gemini cambian con frecuencia y los antiguos se retiran, así que **confirma el nombre exacto** en [Google AI Studio](https://aistudio.google.com) o en la [lista de modelos](https://ai.google.dev/gemini-api/docs/models). Usa un modelo de la familia *Flash* o *Flash-Lite*, por ejemplo:
 
 ```kotlin
-package com.taller.gemini.util
-
 object Constants {
     const val GEMINI_BASE_URL = "https://generativelanguage.googleapis.com/"
 
@@ -460,18 +441,18 @@ object Constants {
 
 ## Tabla de Referencia de los `TODO(PASO X)`
 
-| Paso       | Archivo                                                  | Líneas aprox.  | Descripción de la Tarea                                                             |
-| ---------- | -------------------------------------------------------- | -------------- |-------------------------------------------------------------------------------------|
-| **PASO 1** | `local.properties`                                       | 1 - 6          | En `local.properties` y agregar `GEMINI_API_KEY=...`                                |
-| **PASO 2** | `build.gradle.kts` (raíz) y `app/build.gradle.kts`       | 6 - 8, 70 - 75 | Descomentar plugin `ksp` y las librerías de Retrofit, Moshi y OkHttp                |
-| **PASO 3** | `app/src/main/AndroidManifest.xml`                       | 6              | Descomentar `<uses-permission android:name="android.permission.INTERNET" />`        |
-| **PASO 4** | `app/src/main/java/com/taller/gemini/model/GeminiModels.kt` | 3 - 60         | Declarar DTOs `GeminiRequest`, `Content`, `Part`, `GeminiResponse` con `@JsonClass` |
-| **PASO 4** | `app/src/main/java/com/taller/gemini/model/IncidentInfo.kt` | 3 - 15         | Descomentar `@JsonClass(generateAdapter = true)`                                    |
-| **PASO 4** | `app/src/main/java/com/taller/gemini/data/GeminiApi.kt`  | 3 - 35         | Declarar interfaz Retrofit con `@POST("v1beta/models/{model}:generateContent")`     |
-| **PASO 5** | `app/src/main/java/com/taller/gemini/data/GeminiAiRepository.kt` | 32, 54, 88     | Implementar `askText()`, `askAboutImage()` y `classifyIncident()`                   |
-| **PASO 6** | `app/src/main/java/com/taller/gemini/di/AppModule.kt`    | 13 - 52        | Instanciar `GeminiAiRepository(geminiApi, moshi = moshi)` con Retrofit y Moshi      |
-| **PASO 7** | `app/src/main/java/com/taller/gemini/util/Constants.kt`  | 9              | Reemplazar `"MODELO_AQUI"` por un modelo vigente (ej. `"gemini-3.5-flash-lite"`)    |
-| **PASO 8** | `TALLER.md` / Logcat                                     | Sección 8      | Probar los 3 casos de uso en emulador con OkHttp Logging activado                   |
+| Paso       | Archivo                                                   | Descripción de la Tarea                                                     |
+| ---------- |-----------------------------------------------------------|-----------------------------------------------------------------------------|
+| **PASO 1** | `local.properties`                                        | En `local.properties` y agregar `GEMINI_API_KEY=...`                        |
+| **PASO 2** | `build.gradle.kts` (raíz) y `app/build.gradle.kts`        | Descomentar plugin `ksp` y las librerías de Retrofit, Moshi y OkHttp        |
+| **PASO 3** | `app/src/main/AndroidManifest.xml`                        | Descomentar `<uses-permission android:name="android.permission.INTERNET" />` |
+| **PASO 4** | `app/src/main/java/com/taller/gemini/model/GeminiModels.kt` | Declarar DTOs `GeminiRequest`, `Content`, `Part`, `GeminiResponse` con `@JsonClass` |
+| **PASO 4** | `app/src/main/java/com/taller/gemini/model/IncidentInfo.kt` | Descomentar `@JsonClass(generateAdapter = true)`                               |
+| **PASO 4** | `app/src/main/java/com/taller/gemini/data/GeminiApi.kt`   | Declarar interfaz Retrofit con `@POST("v1beta/models/{model}:generateContent")` |
+| **PASO 5** | `app/src/main/java/com/taller/gemini/data/GeminiAiRepository.kt` | Implementar `askText()`, `askAboutImage()` y `classifyIncident()`               |
+| **PASO 6** | `app/src/main/java/com/taller/gemini/di/AppModule.kt`     | Instanciar `GeminiAiRepository(geminiApi, moshi = moshi)` con Retrofit y Moshi    |
+| **PASO 7** | `app/src/main/java/com/taller/gemini/util/Constants.kt`   | Reemplazar `"MODELO_AQUI"` por un modelo vigente (ej. `"gemini-3.5-flash-lite"`)  |
+| **PASO 8** | Logcat                                             | Probar los 3 casos de uso en emulador con OkHttp Logging activado                   |
 
 ---
 
