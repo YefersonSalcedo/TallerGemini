@@ -1,10 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="108dp"
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
 
-    <!-- Destellos (reducidos y subidos para dejar espacio al texto) -->
     <group
         android:scaleX="0.75"
         android:scaleY="0.75"
@@ -15,16 +15,16 @@
             android:fillColor="#FFFFFFFF"
             android:pathData="M52,30 C52,43 56,50 78,54 C56,58 52,65 52,78 C52,65 48,58 26,54 C48,50 52,43 52,30 Z" />
         <path
-            android:fillColor="#E6FFFFFF"
+            android:fillColor="#FFFFFFFF"
             android:pathData="M77,26 C77,31 78.5,33 84,34 C78.5,35 77,37 77,42 C77,37 75.5,35 70,34 C75.5,33 77,31 77,26 Z" />
     </group>
 
-    <!-- Píldora oscura -->
+    <!-- Píldora solo con contorno para que el texto se distinga en modo temático -->
     <path
-        android:fillColor="#B3101040"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1"
         android:pathData="M30,70.5 H78 A8,8 0 0 1 78,86.5 H30 A8,8 0 0 1 30,70.5 Z" />
 
-    <!-- Texto "GRUPO 03" dibujado con trazos -->
     <path
         android:strokeColor="#FFFFFFFF"
         android:strokeWidth="1.4"
