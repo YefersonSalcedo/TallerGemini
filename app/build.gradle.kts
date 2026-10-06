@@ -70,6 +70,7 @@ dependencies {
     implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
+    implementation(libs.compose.markdown)
 
     // TODO(PASO 2): Descomenta las 5 líneas de red y JSON
     //implementation(libs.retrofit)
