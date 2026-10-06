@@ -30,6 +30,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import dev.jeziellago.compose.markdowntext.MarkdownText
 
 /** Contenedor estándar: scroll vertical, 16dp de margen y 16dp entre elementos. */
 @Composable
@@ -222,8 +223,8 @@ fun ResultCard(icon: ImageVector, title: String, text: String) {
                 color = MaterialTheme.colorScheme.onPrimaryContainer
             )
         }
-        Text(
-            text = text,
+        MarkdownText(
+            markdown = text,
             style = MaterialTheme.typography.bodyLarge,
             color = MaterialTheme.colorScheme.onPrimaryContainer
         )
