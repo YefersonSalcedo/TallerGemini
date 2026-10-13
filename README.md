@@ -612,17 +612,6 @@ object Constants {
 
 ### ¿Qué se valida con estas pruebas?
 
-| Prueba | Qué permite comprobar |
-|---|---|
-| Pregunta de texto | Que la petición se construye y la respuesta se extrae correctamente. |
-| Análisis de imagen | Que la imagen se comprime, se codifica y se envía con el MIME correcto. |
-| Clasificación JSON | Que la respuesta tiene la estructura esperada y Moshi puede convertirla a `IncidentInfo`. |
-| Sin conexión | Que los errores de red se manejan sin cerrar la aplicación. |
-| Revisión de Logcat | Que la solicitud llega a la capa HTTP y permite diagnosticar fallos. |
-
----
-
-### ¿Qué se valida con estas pruebas?
 
 | Prueba | Qué permite comprobar |
 |---|---|
