@@ -37,6 +37,8 @@ val UrgencyMedium = Color(0xFF8D5A00)
 val UrgencyMediumBg = Color(0xFFFFF3CD)
 val UrgencyLow = Color(0xFF2E7D32)
 val UrgencyLowBg = Color(0xFFE8F5E9)
+val UrgencyNone = Color(0xFF5F6368)
+val UrgencyNoneBg = Color(0xFFF1F3F4)
 
 // Degradado característico de Gemini (útil para títulos, botones o el logo)
 val GeminiGradient = Brush.horizontalGradient(

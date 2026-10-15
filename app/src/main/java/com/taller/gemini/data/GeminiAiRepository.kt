@@ -81,10 +81,15 @@ class GeminiAiRepository(
             Analiza el siguiente reporte del ciudadano:
             "$description"
             
-            Devuelve exclusivamente un JSON con estos 3 campos:
-            - "categoria": Ejemplos: "N/A"", Malla Vial", "Agua y Alcantarillado", "Alumbrado Público", "Gestión Ambiental", "Seguridad"
-            - "urgencia": Uno de: "N/A', "Baja", "Media", "Alta", "Crítica"
-            - "resumen": Una frase sintética del problema.
+            Devuelve exclusivamente un JSON válido con estos tres campos:
+            - "categoria": una categoría como "Malla Vial",
+              "Agua y Alcantarillado", "Alumbrado Público",
+              "Gestión Ambiental" o "Seguridad".
+            - "urgencia": "Baja", "Media", "Alta" o "Crítica".
+            - "resumen": una frase breve que describa el problema.
+            
+            Si el texto no describe una incidencia urbana o no encaja en ninguna
+            categoría, usa "N/A" en "categoria" y en "urgencia".
         """.trimIndent()
 
             val request = GeminiRequest(

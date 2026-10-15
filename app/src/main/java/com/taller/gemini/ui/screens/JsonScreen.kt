@@ -44,6 +44,8 @@ import com.taller.gemini.ui.theme.UrgencyLow
 import com.taller.gemini.ui.theme.UrgencyLowBg
 import com.taller.gemini.ui.theme.UrgencyMedium
 import com.taller.gemini.ui.theme.UrgencyMediumBg
+import com.taller.gemini.ui.theme.UrgencyNone
+import com.taller.gemini.ui.theme.UrgencyNoneBg
 import com.taller.gemini.viewmodel.JsonViewModel
 
 @Composable
@@ -103,7 +105,8 @@ private fun IncidentCard(incident: IncidentInfo) {
         "crítica", "critica" -> UrgencyCritical to UrgencyCriticalBg
         "alta" -> UrgencyHigh to UrgencyHighBg
         "media" -> UrgencyMedium to UrgencyMediumBg
-        else -> UrgencyLow to UrgencyLowBg
+        "baja" -> UrgencyLow to UrgencyLowBg
+        else -> UrgencyNone to UrgencyNoneBg   // "N/A" o cualquier valor inesperado
     }
 
     // Tarjeta blanca con borde: se distingue del fondo sin depender de la sombra
